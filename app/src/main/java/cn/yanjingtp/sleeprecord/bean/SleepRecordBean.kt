@@ -5,5 +5,4 @@ class SleepRecordBean {
     var startTime: String? = null
     var endTime: String? = null
     var interval: String? = null
-    var totalTime: String? = null
 }

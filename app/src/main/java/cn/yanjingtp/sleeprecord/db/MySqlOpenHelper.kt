@@ -14,7 +14,7 @@ class MySqlOpenHelper(context: Context?) : SQLiteOpenHelper(context, "sleepRecor
                 "start_time varchar," +
                 "end_time varchar," +
                 "interval varchar," +
-                "total_time varchar"+
+                "total_time varchar" +
                 "); "
 
         db?.execSQL(sql)

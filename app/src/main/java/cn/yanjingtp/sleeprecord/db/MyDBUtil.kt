@@ -13,7 +13,7 @@ class MyDBUtil(context: Context) {
     private val tableName: String = "tb_sleep_record"
     private var mySqlOpenHelper = MySqlOpenHelper(context)
 
-
+    //保存开始时间
     fun saveStartTime(bean: SleepRecordBean) {
         var db: SQLiteDatabase = mySqlOpenHelper!!.writableDatabase
         var contentValues = ContentValues()
@@ -26,6 +26,7 @@ class MyDBUtil(context: Context) {
 
     }
 
+    //保存睡醒时间及睡觉时长
     fun saveEndTime(bean: SleepRecordBean) {
         var db: SQLiteDatabase = mySqlOpenHelper.writableDatabase
         var contentValues = ContentValues()
@@ -35,19 +36,6 @@ class MyDBUtil(context: Context) {
         var endTime: Date = dateFormat.parse(bean.endTime)
 
         val diff = endTime.time - startTime.time
-//        var days = diff / (1000 * 60 * 60 * 24)
-//        val hours = (diff - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-//        val minutes = (diff - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60)
-//        val second = (diff - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60) - minutes * (1000 * 60)) / 1000
-//
-//        var interval: String
-//        when {
-//            days > 0 -> interval = "" + days + "天" + hours + "小时" + minutes + "分钟" + second + "秒"
-//            hours > 0 -> interval = "" + hours + "小时" + minutes + "分钟" + second + "秒"
-//            minutes > 0 -> interval = "" + minutes + "分钟" + second + "秒"
-//            else -> interval = "" + second + "秒"
-//        }
-
 
         contentValues.put("end_time", bean.endTime)
         contentValues.put("interval", getTimeDiff(diff))
@@ -57,6 +45,7 @@ class MyDBUtil(context: Context) {
         db.close()
     }
 
+    //获取listview中需要数据
     fun getData(dateNow: String): MutableList<SleepRecordBean> {
         var list: MutableList<SleepRecordBean> = ArrayList()
         var db: SQLiteDatabase = mySqlOpenHelper!!.readableDatabase
@@ -74,6 +63,7 @@ class MyDBUtil(context: Context) {
         return list
     }
 
+    //获取当日睡眠总时间
     fun getTotalToday(dateNow: String): String {
         var totalToady: Long = 0
         var db: SQLiteDatabase = mySqlOpenHelper.readableDatabase
@@ -87,6 +77,7 @@ class MyDBUtil(context: Context) {
         return getTimeDiff(totalToady)
     }
 
+    //计算时间差
     fun getTimeDiff(diff: Long): String {
         var timeDiff: String?
 

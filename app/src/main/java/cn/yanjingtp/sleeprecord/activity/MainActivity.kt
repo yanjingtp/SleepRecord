@@ -5,7 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import cn.yanjingtp.sleeprecord.R
-import cn.yanjingtp.sleeprecord.adapter.MyListAdpater
+import cn.yanjingtp.sleeprecord.adapter.MyListAdapter
 import cn.yanjingtp.sleeprecord.bean.SleepRecordBean
 import cn.yanjingtp.sleeprecord.db.MyDBUtil
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
         var dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
         var list: MutableList<SleepRecordBean> = arrayListOf()
-        var adater: MyListAdpater? = null
+        var adater: MyListAdapter? = null
 
         if (!sp.getBoolean("btnState", false)) {
             btnState.text = "开始睡了"
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         list = MyDBUtil(this).getData(dayFormat.format(Date(System.currentTimeMillis())))
-        adater = MyListAdpater(this, list)
+        adater = MyListAdapter(this, list)
         listView.adapter = adater
         adater.notifyDataSetChanged()
 
@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //更新当日睡眠总时间
     fun updateTotalToday() {
         tvToday.text = "今天的睡眠总时间:" + MyDBUtil(this).getTotalToday(dayFormat.format(Date(System.currentTimeMillis())))
     }

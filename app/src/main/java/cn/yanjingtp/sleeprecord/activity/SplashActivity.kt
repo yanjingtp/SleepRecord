@@ -13,13 +13,13 @@ class SplashActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         val timer = Timer()
-        timer.schedule(object:TimerTask(){
+        timer.schedule(object : TimerTask() {
             override fun run() {
                 val intent = Intent()
                 startActivity(intent.setClass(this@SplashActivity, MainActivity::class.java))
                 finish()
             }
 
-        },2000)
+        }, 2000)
     }
 }

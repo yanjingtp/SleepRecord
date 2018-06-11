@@ -30,7 +30,7 @@
         <TextView
             android:textSize="15sp"
             android:textStyle="bold"
-            android:text="睡觉时间"
+            android:text="睡觉时长"
             android:gravity="center"
             android:layout_width="0dp"
             android:layout_height="match_parent"

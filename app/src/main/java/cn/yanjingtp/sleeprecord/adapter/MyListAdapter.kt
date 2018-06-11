@@ -8,7 +8,7 @@ import android.widget.TextView
 import cn.yanjingtp.sleeprecord.R
 import cn.yanjingtp.sleeprecord.bean.SleepRecordBean
 
-class MyListAdpater(context: Context, list: List<SleepRecordBean>) : BaseAdapter() {
+class MyListAdapter(context: Context, list: List<SleepRecordBean>) : BaseAdapter() {
     var context = context
     var list = list
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
