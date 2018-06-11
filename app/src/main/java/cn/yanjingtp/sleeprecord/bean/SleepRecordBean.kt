@@ -1,8 +1,7 @@
 package cn.yanjingtp.sleeprecord.bean
 
-class SleepRecordBean {
-    var dateNow : String? = null
-    var startTime: String? = null
-    var endTime: String? = null
-    var interval: String? = null
-}
+data class SleepRecordBean(
+        var dateNow: String,
+        var startTime: String,
+        var endTime: String,
+        var interval: String)
