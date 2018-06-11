@@ -42,12 +42,11 @@ class MainActivity : AppCompatActivity() {
             if (!sp.getBoolean("btnState", false)) {
                 btnState.text = "已经醒了"
                 sp.edit().putBoolean("btnState", true).apply()
-                var bean = SleepRecordBean()
+                var bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())),
+                        dateFormat.format(Date(System.currentTimeMillis())),
+                        "",
+                        "")
 
-                bean.dateNow = dayFormat.format(Date(System.currentTimeMillis()))
-                bean.startTime = dateFormat.format(Date(System.currentTimeMillis()))
-                bean.endTime = ""
-                bean.interval = ""
                 MyDBUtil(this@MainActivity).saveStartTime(bean)
                 list.clear()
                 list.addAll(MyDBUtil(this).getData(dayFormat.format(Date(System.currentTimeMillis()))))
@@ -57,9 +56,10 @@ class MainActivity : AppCompatActivity() {
             } else {
                 btnState.text = "开始睡了"
                 sp.edit().putBoolean("btnState", false).apply()
-                var bean = SleepRecordBean()
-                bean.endTime = dateFormat.format(Date(System.currentTimeMillis()))
-                bean.startTime = list[0].startTime
+                var bean = SleepRecordBean("",
+                        list[0].startTime,
+                        dateFormat.format(Date(System.currentTimeMillis())),
+                        "")
 
                 MyDBUtil(this@MainActivity).saveEndTime(bean)
                 list.clear()

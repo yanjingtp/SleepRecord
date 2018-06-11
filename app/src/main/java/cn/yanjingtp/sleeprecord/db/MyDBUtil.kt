@@ -52,10 +52,11 @@ class MyDBUtil(context: Context) {
         val cursor = db.query(tableName, arrayOf("start_time", "end_time", "interval"), "date_now= ?", arrayOf(dateNow), null, null, "start_time desc")
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                var bean = SleepRecordBean()
-                bean.startTime = cursor.getString(cursor.getColumnIndex("start_time"))
-                bean.endTime = cursor.getString(cursor.getColumnIndex("end_time"))
-                bean.interval = cursor.getString(cursor.getColumnIndex("interval"))
+                var bean = SleepRecordBean("",
+                        cursor.getString(cursor.getColumnIndex("start_time")),
+                        cursor.getString(cursor.getColumnIndex("end_time")),
+                        cursor.getString(cursor.getColumnIndex("interval"))
+                )
                 list.add(bean)
             }
         }
