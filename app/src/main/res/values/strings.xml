@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SleepRecord</string>
+    <string name="btn_sleep">开始睡了</string>
+    <string name="btn_awake">已经醒了</string>
+</resources>
