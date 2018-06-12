@@ -64,6 +64,12 @@ class MyDBUtil(context: Context) {
         return list
     }
 
+    fun delData(startTime : String){
+        var db:SQLiteDatabase = mySqlOpenHelper.writableDatabase
+        db.delete(tableName,"start_time = ?", arrayOf(startTime))
+        db.close()
+    }
+
     //获取当日睡眠总时间
     fun getTotalToday(dateNow: String): String {
         var totalToady: Long = 0
