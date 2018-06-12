@@ -59,14 +59,26 @@ class MainActivity : AppCompatActivity() {
             } else {
                 btnState.text = "开始睡了"
                 sp.edit().putBoolean("btnState", false).apply()
-                var bean:SleepRecordBean
+                var bean: SleepRecordBean
                 if (list.isEmpty()) {
-                    bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())),
-                            dayFormat.format(Date(System.currentTimeMillis()))+" 00:00:00",
-                            dateFormat.format(Date(System.currentTimeMillis())),
-                            "")
-                    MyDBUtil(this@MainActivity).saveStartTime(bean)
-                }else{
+                    if (!selectDate.isEmpty() && selectDate != dayFormat.format(Date(System.currentTimeMillis()))) {
+                        list.clear()
+                        list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(System.currentTimeMillis())))
+                        bean = SleepRecordBean("",
+                                list[0].startTime,
+                                dateFormat.format(Date(System.currentTimeMillis())),
+                                "")
+                    } else {
+                        bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())),
+                                dayFormat.format(Date(System.currentTimeMillis())) + " 00:00:00",
+                                dateFormat.format(Date(System.currentTimeMillis())),
+                                "")
+                        MyDBUtil(this@MainActivity).saveStartTime(bean)
+                    }
+
+                } else {
+                    list.clear()
+                    list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(System.currentTimeMillis())))
                     bean = SleepRecordBean("",
                             list[0].startTime,
                             dateFormat.format(Date(System.currentTimeMillis())),
