@@ -29,11 +29,11 @@ class MainActivity : AppCompatActivity() {
         var dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
         var list: MutableList<SleepRecordBean> = MyDBUtil(this).getData(dayFormat.format(Date(System.currentTimeMillis())))
-        var adater: MyListAdapter? = MyListAdapter(this, list)
+        var adapter: MyListAdapter? = MyListAdapter(this, list)
 
 
-        listView.adapter = adater
-        adater!!.notifyDataSetChanged()
+        listView.adapter = adapter
+        adapter!!.notifyDataSetChanged()
 
         updateTotalToday(dayFormat.format(Date(System.currentTimeMillis())))
 
@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
             MyDBUtil(this@MainActivity).saveStartTime(bean)
             list.clear()
             list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(Date(System.currentTimeMillis()))))
-            adater.notifyDataSetChanged()
+            adapter.notifyDataSetChanged()
+            listView.setSelection(0)
         }
 
         //已经醒了
@@ -57,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                 MyDBUtil(this@MainActivity).saveEndTime(bean)
                 list.clear()
                 list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(Date(System.currentTimeMillis()))))
-                adater.notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
             }
         }
 
@@ -100,7 +101,7 @@ class MainActivity : AppCompatActivity() {
                         //刷新页面显示
                         list.clear()
                         list.addAll(MyDBUtil(this@MainActivity).getData(selectDate))
-                        adater.notifyDataSetChanged()
+                        adapter.notifyDataSetChanged()
 
                         updateTotalToday(selectDate)
 
@@ -119,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 //刷新页面显示
                 list.clear()
                 list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(Date(System.currentTimeMillis()))))
-                adater.notifyDataSetChanged()
+                adapter.notifyDataSetChanged()
 
                 updateTotalToday(dayFormat.format(Date(System.currentTimeMillis())))
                 dialog.dismiss()
@@ -172,7 +173,7 @@ class MainActivity : AppCompatActivity() {
                                 var targetDate =dayFormat.format(dayFormat.parse(list[position].startTime))
                                 list.clear()
                                 list.addAll(MyDBUtil(this@MainActivity).getData(targetDate))
-                                adater.notifyDataSetChanged()
+                                adapter.notifyDataSetChanged()
                                 updateTotalToday(targetDate)
                                 dialog.dismiss()
                             }
