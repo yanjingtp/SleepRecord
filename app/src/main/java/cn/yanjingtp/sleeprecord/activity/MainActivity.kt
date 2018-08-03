@@ -2,15 +2,20 @@ package cn.yanjingtp.sleeprecord.activity
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.content.Context
+import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.util.Log
+import android.view.View
+import android.widget.Toast
 import cn.yanjingtp.sleeprecord.R
 import cn.yanjingtp.sleeprecord.adapter.MyListAdapter
 import cn.yanjingtp.sleeprecord.bean.SleepRecordBean
 import cn.yanjingtp.sleeprecord.db.MyDBUtil
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_modify.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -21,19 +26,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val sp = getSharedPreferences("sleepRecord", Context.MODE_PRIVATE)
         var dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
         var list: MutableList<SleepRecordBean> = MyDBUtil(this).getData(dayFormat.format(Date(System.currentTimeMillis())))
         var adater: MyListAdapter? = MyListAdapter(this, list)
-
-        var selectDate = ""
-
-        if (!sp.getBoolean("btnState", false)) {
-            btnState.text = "开始睡了"
-        } else {
-            btnState.text = "已经醒了"
-        }
 
 
         listView.adapter = adater
@@ -41,59 +37,28 @@ class MainActivity : AppCompatActivity() {
 
         updateTotalToday(dayFormat.format(Date(System.currentTimeMillis())))
 
-        btnState.setOnClickListener {
-            if (!sp.getBoolean("btnState", false)) {
-                btnState.text = "已经醒了"
-                sp.edit().putBoolean("btnState", true).apply()
-                var bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())),
-                        dateFormat.format(Date(System.currentTimeMillis())),
-                        "",
-                        "")
+        //开始睡了
+        btnSleep.setOnClickListener {
+            var bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())), dateFormat.format(System.currentTimeMillis()), "", "")
+            MyDBUtil(this@MainActivity).saveStartTime(bean)
+            list.clear()
+            list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(Date(System.currentTimeMillis()))))
+            adater.notifyDataSetChanged()
+        }
 
-                MyDBUtil(this@MainActivity).saveStartTime(bean)
-                list.clear()
-                list.addAll(MyDBUtil(this).getData(dayFormat.format(Date(System.currentTimeMillis()))))
-
-                adater.notifyDataSetChanged()
-
+        //已经醒了
+        btnWake.setOnClickListener {
+            if (list.isEmpty()) {
+                Toast.makeText(this@MainActivity, R.string.alert_sleep, Toast.LENGTH_SHORT).show()
+            } else if (!list.isEmpty() && !list[0].endTime.isEmpty()) {
+                Toast.makeText(this@MainActivity, R.string.alert_wake, Toast.LENGTH_SHORT).show()
             } else {
-                btnState.text = "开始睡了"
-                sp.edit().putBoolean("btnState", false).apply()
-                var bean: SleepRecordBean
-                if (list.isEmpty()) {
-                    if (!selectDate.isEmpty() && selectDate != dayFormat.format(Date(System.currentTimeMillis()))) {
-                        list.clear()
-                        list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(System.currentTimeMillis())))
-                        bean = SleepRecordBean("",
-                                list[0].startTime,
-                                dateFormat.format(Date(System.currentTimeMillis())),
-                                "")
-                    } else {
-                        bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())),
-                                dayFormat.format(Date(System.currentTimeMillis())) + " 00:00:00",
-                                dateFormat.format(Date(System.currentTimeMillis())),
-                                "")
-                        MyDBUtil(this@MainActivity).saveStartTime(bean)
-                    }
-
-                } else {
-                    list.clear()
-                    list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(System.currentTimeMillis())))
-                    bean = SleepRecordBean("",
-                            list[0].startTime,
-                            dateFormat.format(Date(System.currentTimeMillis())),
-                            "")
-                }
-
+                var bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())), list[0].startTime, dateFormat.format(Date(System.currentTimeMillis())), "")
                 MyDBUtil(this@MainActivity).saveEndTime(bean)
                 list.clear()
-                list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(System.currentTimeMillis())))
+                list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(Date(System.currentTimeMillis()))))
                 adater.notifyDataSetChanged()
-
-                updateTotalToday(dayFormat.format(Date(System.currentTimeMillis())))
-
             }
-
         }
 
         //侧滑显示
@@ -103,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
         //当前显示日期
         tvNowShow.text = "当前显示：" + dayFormat.format(Date(System.currentTimeMillis()))
-
+        var selectDate = ""
         tvNowShow.setOnClickListener {
             val ca = Calendar.getInstance()
             var showYear: Int
@@ -124,13 +89,11 @@ class MainActivity : AppCompatActivity() {
 
             DatePickerDialog(this@MainActivity,
                     DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-
-                        when {
-                            month + 1 < 10 && dayOfMonth < 10 -> selectDate = "" + year + "-0" + (month + 1) + "-0" + dayOfMonth
-                            month + 1 < 10 -> selectDate = "" + year + "-0" + (month + 1) + "-" + dayOfMonth
-                            dayOfMonth < 10 -> selectDate = "" + year + "-" + (month + 1) + "-0" + dayOfMonth
-
-                        }
+                        selectDate = String.format("%d-%s-%s"
+                                , year
+                                , String.format("%02d", month + 1)
+                                , String.format("%02d", dayOfMonth)
+                        )
 
                         tvNowShow.text = "当前显示：" + selectDate
 
@@ -146,6 +109,7 @@ class MainActivity : AppCompatActivity() {
                     showYear, showMonth, showDay).show()
         }
 
+        //删除
         listView.setOnItemLongClickListener { parent, view, position, id ->
             val dialog = AlertDialog.Builder(this@MainActivity).create()
             dialog.setCancelable(false)
@@ -165,6 +129,68 @@ class MainActivity : AppCompatActivity() {
             })
             dialog.show()
             true
+        }
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            val dialog = AlertDialog.Builder(this@MainActivity)
+                    .setNegativeButton("取消", null)
+//                    .setPositiveButton("确定", null)
+                    .create()
+            dialog.setCancelable(false)
+            var view = View.inflate(this@MainActivity, R.layout.layout_modify, null)
+            view.etStartTime.text = Editable.Factory.getInstance().newEditable(list[position].startTime)
+            view.etStartTime.isFocusableInTouchMode = false
+            view.etWakeTime.text = Editable.Factory.getInstance().newEditable(list[position].endTime)
+            view.etWakeTime.isFocusableInTouchMode = false
+
+
+
+            dialog.setView(view)
+
+            dialog.setOnShowListener {
+
+                view.etWakeTime.setOnClickListener {
+                    val ca = Calendar.getInstance()
+                    DatePickerDialog(this@MainActivity, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+
+                        TimePickerDialog(this@MainActivity, TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                            var wakeTime = String.format("%d-%s-%s %s:%s:%s"
+                                    , year
+                                    , String.format("%02d", month + 1)
+                                    , String.format("%02d", dayOfMonth)
+                                    , String.format("%02d", hourOfDay)
+                                    , String.format("%02d", minute)
+                                    , String.format("%02d", 0)
+                            )
+
+                            Log.e("====", wakeTime)
+                            if (dateFormat.parse(wakeTime).before(dateFormat.parse(list[position].startTime))) {
+                                Toast.makeText(this@MainActivity, R.string.alert_modify, Toast.LENGTH_LONG).show()
+                            } else {
+                                var bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())), list[position].startTime, wakeTime, "")
+                                MyDBUtil(this@MainActivity).saveEndTime(bean)
+                                var targetDate =dayFormat.format(dayFormat.parse(list[position].startTime))
+                                list.clear()
+                                list.addAll(MyDBUtil(this@MainActivity).getData(targetDate))
+                                adater.notifyDataSetChanged()
+                                updateTotalToday(targetDate)
+                                dialog.dismiss()
+                            }
+                        }, ca.get(Calendar.HOUR_OF_DAY), ca.get(Calendar.MINUTE), true).show()
+
+                    }
+                            , list[position].startTime.substring(0, 4).toInt()
+                            , list[position].startTime.substring(5, 7).toInt() - 1
+                            , list[position].startTime.substring(8, 10).toInt()
+                    ).show()
+                }
+
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+                    dialog.dismiss()
+                }
+            }
+
+            dialog.show()
         }
 
     }

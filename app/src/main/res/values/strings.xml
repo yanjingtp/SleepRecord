@@ -1,8 +1,16 @@
 <resources>
     <string name="app_name">宝宝睡眠记录</string>
     <string name="btn_sleep">开始睡了</string>
-    <string name="btn_awake">已经醒了</string>
+    <string name="btn_wake">已经醒了</string>
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="now_show">当前显示：</string>
+    <string name="alert_sleep">请先保存开始睡时间</string>
+    <string name="alert_wake">睡醒时间已经保存</string>
+    <string name="modify">修改</string>
+    <string name="start_time">开始时间:</string>
+    <string name="wake_time">睡醒时间:</string>
+    <string name="edit_start">请输入开始时间</string>
+    <string name="edit_wake">请输入睡醒时间</string>
+    <string name="alert_modify">睡醒时间应大于开始睡时间</string>
 </resources>

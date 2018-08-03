@@ -70,12 +70,27 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
+
             <Button
-                android:id="@+id/btnState"
+                android:layout_margin="30dp"
+                android:id="@+id/btnSleep"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/btn_shape" />
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_shape"
+                android:text="@string/btn_sleep" />
+
+            <Button
+                android:layout_margin="30dp"
+                android:id="@+id/btnWake"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_shape"
+                android:text="@string/btn_wake"
+                android:layout_alignParentEnd="true" />
+
         </RelativeLayout>
 
     </LinearLayout>

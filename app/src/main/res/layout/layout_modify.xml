@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:padding="20dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/modify"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/title_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/start_time"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <EditText
+        android:id="@+id/etStartTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_start"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toRightOf="@id/title_start"
+        app:layout_constraintStart_toEndOf="@+id/title_start"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <TextView
+        android:id="@+id/title_wake"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/wake_time"
+        android:textSize="15sp"
+        app:layout_constraintTop_toBottomOf="@id/title_start" />
+
+    <EditText
+        android:id="@+id/etWakeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_wake"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toRightOf="@id/title_wake"
+        app:layout_constraintTop_toBottomOf="@id/title_start" />
+
+
+</android.support.constraint.ConstraintLayout>
