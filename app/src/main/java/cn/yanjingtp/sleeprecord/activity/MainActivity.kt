@@ -21,7 +21,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    var dayFormat = SimpleDateFormat("yyyy-MM-dd")
+    private var dayFormat = SimpleDateFormat("yyyy-MM-dd")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
 
 
     //更新当日睡眠总时间
-    fun updateTotalToday(dateNow: String) {
+    private fun updateTotalToday(dateNow: String) {
         tvToday.text = "今天的睡眠总时间:" + MyDBUtil(this).getTotalToday(dateNow)
     }
 }
