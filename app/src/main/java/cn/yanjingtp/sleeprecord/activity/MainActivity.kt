@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 list.clear()
                 list.addAll(MyDBUtil(this@MainActivity).getData(dayFormat.format(Date(System.currentTimeMillis()))))
                 adapter.notifyDataSetChanged()
+                listView.setSelection(0)
             }
         }
 
@@ -170,7 +171,7 @@ class MainActivity : AppCompatActivity() {
                             } else {
                                 var bean = SleepRecordBean(dayFormat.format(Date(System.currentTimeMillis())), list[position].startTime, wakeTime, "")
                                 MyDBUtil(this@MainActivity).saveEndTime(bean)
-                                var targetDate =dayFormat.format(dayFormat.parse(list[position].startTime))
+                                var targetDate = dayFormat.format(dayFormat.parse(list[position].startTime))
                                 list.clear()
                                 list.addAll(MyDBUtil(this@MainActivity).getData(targetDate))
                                 adapter.notifyDataSetChanged()
